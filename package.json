@@ -2,6 +2,11 @@
   "name": "techsol",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=14.0.0",
+    "yarn": ">=1.22.0",
+    "npm": "use yarn instead of npm"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,9 +14,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.3.5",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "framer-motion": "^7.5.3",
+    "gapi-script": "^1.2.0",
     "next": "12.3.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-google-login": "^5.2.2",
+    "react-icons": "^4.6.0"
   },
   "devDependencies": {
     "eslint": "8.25.0",
