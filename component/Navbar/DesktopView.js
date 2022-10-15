@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
     Box,
     Flex,
@@ -16,13 +16,57 @@ import { navItems, profileNavItems } from './NavItems';
 import NavLink from './NavLink';
 import { HiOutlineUser } from 'react-icons/hi';
 import { VscIssueDraft } from 'react-icons/vsc';
-import { AiOutlineLogin } from 'react-icons/ai';
+import { AiOutlineLogin, AiOutlineLogout } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 import { useRouter } from 'next/router';
+import { getLocalStorageData, clearLocalStorageData } from '../../utils/localStorage/localStorageData';
+import { keepLogin, logout } from '../../action/auth/loginUser';
 
 const DesktopView = () => {
     const router = useRouter();
     const [isSignIn, setSignIn] = useState(false);
+    const [isLoading, setLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState({})
+
+    useEffect(() => {
+        // console.log(accessToken)
+        if (accessToken?.tkd) {
+            keepLogin(accessToken.tkd).then(res => {
+                // console.log(res);
+                setSignIn(true);
+                if (res) {
+                    setLoading(false);
+                } else {
+                    setSignIn(false);
+                }
+            })
+        } else {
+            setLoading(false);
+        }
+
+    }, [accessToken]);
+
+    useEffect(() => {
+        const token = getLocalStorageData('profile');
+        setAccessToken(token);
+    }, [router])
+
+
+
+    const handleLogout = async () => {
+        if (accessToken?.tkd) {
+            let res = await logout(accessToken.tkd);
+            if (res) {
+                setSignIn(false);
+                clearLocalStorageData('profile');
+                // router.push('/')
+            } else {
+                setSignIn(true);
+            }
+        } else {
+            console.log('invalid access token')
+        }
+    }
 
     const gotoUrl = href => {
         href ? router.push(href) : null;
@@ -47,17 +91,6 @@ const DesktopView = () => {
                         ))}
                     </HStack>
 
-                    {/* <HStack spacing={8} alignItems={'center'}>
-                        <Box>TECHSOL</Box>
-                        <HStack
-                            as={'nav'}
-                            spacing={4}
-                            display={{ base: 'none', md: 'flex' }}>
-                            {navItems.map(item => (
-                                <NavLink key={item.key} href={item.href}>{item.label}</NavLink>
-                            ))}
-                        </HStack>
-                    </HStack> */}
                     <Flex alignItems={'center'}>
                         {isSignIn ? (
                             <Menu>
@@ -124,6 +157,19 @@ const DesktopView = () => {
                                             <HiOutlineUser />
                                         </IconContext.Provider>
                                         {profileNavItems[1].label}
+                                    </MenuItem>
+                                    <MenuDivider />
+                                    <MenuItem
+                                        onClick={() => { handleLogout() }}
+                                        color='red.400'
+                                        _hover={{
+                                            color: 'red.700'
+                                        }}
+                                    >
+                                        <IconContext.Provider value={{ size: 16, style: { marginRight: 6, color: 'inherit' } }}>
+                                            <AiOutlineLogout />
+                                        </IconContext.Provider>
+                                        Logout
                                     </MenuItem>
                                 </MenuList>
                             </Menu>

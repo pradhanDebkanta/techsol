@@ -4,6 +4,7 @@ import sign from '../../assets/css/signIn.module.css';
 
 const SignInWithGoogle = ({ onSignIn, buttonText }) => {
     const handleSuccess = (response) => {
+        // console.log(response)
         onSignIn(response.tokenId)
     }
     const handleError = (response) => {
