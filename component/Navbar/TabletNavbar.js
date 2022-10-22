@@ -62,8 +62,7 @@ const TabletNavbar = () => {
             if (res) {
                 setSignIn(false);
                 clearLocalStorageData('profile');
-
-                // router.push('/')
+                router.replace('/')
             } else {
                 setSignIn(true);
             }

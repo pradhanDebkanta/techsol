@@ -59,7 +59,7 @@ const DesktopView = () => {
             if (res) {
                 setSignIn(false);
                 clearLocalStorageData('profile');
-                // router.push('/')
+                router.replace('/')
             } else {
                 setSignIn(true);
             }
